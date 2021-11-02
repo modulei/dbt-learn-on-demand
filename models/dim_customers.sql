@@ -1,35 +1,19 @@
 /* tell dbt to run this as a table, instead of the view default */
+
 {{ config (
     materialized="table"
 )}}
 
-
-/* transform steps below  */
-
-
+/* reference our newly modularized CTEs */
 with customers as (
-
-    select
-        id as customer_id,
-        first_name,
-        last_name
-
-    from raw.jaffle_shop.customers
-
+    select * from {{ ref('stg_customers') }}
 ),
 
 orders as (
-
-    select
-        id as order_id,
-        user_id as customer_id,
-        order_date,
-        status
-
-    from raw.jaffle_shop.orders
-
+    select * from {{ ref('stg_orders') }}
 ),
 
+/* transform steps below  */
 customer_orders as (
 
     select
